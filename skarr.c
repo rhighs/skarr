@@ -28,9 +28,9 @@ void* __skarr_push(void** arr, u32 typesize) {
     skarr* m_data = __get_data(*arr);
     if (m_data->size*typesize + typesize >= m_data->cap) {
         u32 new_cap = m_data->cap + m_data->cap/2;
-        skarr* new_arr = realloc(m_data, sizeof(skarr) + new_cap);
-        new_arr->cap = new_cap;
-        *arr = new_arr->data;
+        m_data = realloc(m_data, sizeof(skarr) + new_cap);
+        m_data->cap = new_cap;
+        *arr = m_data->data;
     }
     return (void*)&m_data->data[typesize * m_data->size++];
 }
