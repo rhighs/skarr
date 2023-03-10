@@ -15,13 +15,24 @@
 
 #define DALLOC 4
 
+void* skarr_create(void** dst, u32 size, u32 n) {
+    u32 bufsize = size * (n != 0 ? n : DALLOC);
+    skarr* out = (skarr*)malloc(sizeof(skarr) + bufsize);
+    out->cap = bufsize;
+    out->size = 0;
+    if (dst != NULL) {
+        *dst = out->data;
+    }
+    return &out->data;
+}
+
 static
 skarr* __get_data(void* arr) {
     return &((skarr*)arr)[-1];
 }
 
-u32 skarr_size(void** arr) { return __get_data(*arr)->size; }
-u32 skarr_capacity(void** arr) { return __get_data(*arr)->cap; }
+u32 __skarr_size(void** arr) { return __get_data(*arr)->size; }
+u32 __skarr_capacity(void** arr) { return __get_data(*arr)->cap; }
 
 static
 skarr* __skarr_realloc(skarr* m_data) {
@@ -32,38 +43,27 @@ skarr* __skarr_realloc(skarr* m_data) {
     return m_data;
 }
 
-void skarr_free(void** arr) {
+void __skarr_free(void** arr) {
     skarr* m_data = __get_data(*arr);
     free(m_data);
 }
 
-void skarr_reset(void** arr) {
+void __skarr_reset(void** arr) {
     skarr* m_data = __get_data(*arr);
     free(m_data->data);
     m_data->cap = 0;
     m_data->size = 0;
 }
 
-void skarr_clear(void** arr) {
+void __skarr_clear(void** arr) {
     skarr* m_data = __get_data(*arr);
     m_data->size = 0;
     memset(m_data->data, 0, m_data->cap);
 }
 
-void skarr_erase(void** arr) {
+void __skarr_erase(void** arr) {
     skarr* m_data = __get_data(*arr);
     m_data->size = 0;
-}
-
-void* skarr_create(void** dst, u32 size, u32 n) {
-    u32 bufsize = size * (n != 0 ? n : DALLOC);
-    skarr* out = (skarr*)malloc(sizeof(skarr) + bufsize);
-    out->cap = bufsize;
-    out->size = 0;
-    if (dst != NULL) {
-        *dst = out->data;
-    }
-    return &out->data;
 }
 
 void* __skarr_push(void** arr, u32 typesize) {
