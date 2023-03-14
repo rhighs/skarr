@@ -37,7 +37,7 @@ u32 __skarr_capacity(void** arr) { return __get_data(*arr)->cap; }
 static
 skarr* __skarr_realloc(skarr* m_data) {
     u32 new_cap = m_data->cap + m_data->cap/2;
-    if (new_cap == 0) new_cap = 4;
+    if (new_cap == 0) new_cap = DALLOC;
     m_data = realloc(m_data, sizeof(skarr) + new_cap);
     m_data->cap = new_cap;
     return m_data;
